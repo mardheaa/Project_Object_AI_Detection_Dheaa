@@ -1,0 +1,903 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --black: #171717;
+    --dark-gray: #444;
+    --gray: #777;
+    --light-gray: #f3f3f3;
+    --border: #e5e5e5;
+    --white: #ffffff;
+    --green: #38b87c;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #eeeeee;
+    color: var(--black);
+}
+
+
+/* =====================================
+   APP
+===================================== */
+
+.app {
+    width: 100%;
+    max-width: 480px;
+    min-height: 100vh;
+
+    margin: auto;
+
+    background: var(--white);
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+
+/* =====================================
+   HEADER
+===================================== */
+
+.header {
+    height: 62px;
+
+    padding: 0 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    background: white;
+
+    border-bottom: 1px solid var(--border);
+
+    position: relative;
+    z-index: 20;
+}
+
+
+.brand {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    font-size: 18px;
+    font-weight: 600;
+}
+
+
+.logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: #f0efff;
+    border: 1px solid #eeecff;
+}
+
+.logo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+
+
+.camera-type {
+    color: #888;
+
+    font-size: 11px;
+}
+
+
+/* =====================================
+   PAGE
+===================================== */
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+
+/* =====================================
+   CAMERA
+===================================== */
+
+.camera-container {
+    height: calc(100vh - 190px);
+
+    min-height: 500px;
+
+    position: relative;
+
+    background: #111;
+
+    overflow: hidden;
+}
+
+
+/* VIDEO */
+
+#video {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    background: #111;
+}
+
+
+/* CANVAS */
+
+#canvas {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    pointer-events: none;
+
+    z-index: 5;
+}
+
+
+/* =====================================
+   PLACEHOLDER
+===================================== */
+
+.camera-placeholder {
+    position: absolute;
+
+    inset: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+
+    color: white;
+
+    text-align: center;
+
+    z-index: 4;
+
+    background: #151515;
+}
+
+
+.placeholder-icon {
+    font-size: 42px;
+
+    margin-bottom: 14px;
+}
+
+
+.camera-placeholder p {
+    font-size: 16px;
+
+    font-weight: 500;
+
+    margin-bottom: 6px;
+}
+
+
+.camera-placeholder small {
+    font-size: 11px;
+
+    color: #aaa;
+}
+
+
+/* =====================================
+   STATUS
+===================================== */
+
+.detection-status {
+    position: absolute;
+
+    top: 15px;
+    left: 15px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 7px 11px;
+
+    border-radius: 15px;
+
+    background: rgba(0, 0, 0, 0.45);
+
+    color: white;
+
+    font-size: 11px;
+
+    z-index: 10;
+}
+
+
+.status-dot {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: #999;
+}
+
+
+.status-dot.active {
+    background: var(--green);
+}
+
+
+/* =====================================
+   CAMERA CONTROLS
+===================================== */
+
+.camera-controls {
+    position: absolute;
+
+    right: 13px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+
+    z-index: 10;
+}
+
+
+.side-button {
+    width: 50px;
+    height: 50px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: rgba(45, 45, 45, 0.72);
+
+    color: white;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    backdrop-filter: blur(8px);
+
+    transition: 0.2s;
+}
+
+
+.side-button:hover {
+    background: rgba(20, 20, 20, 0.9);
+}
+
+
+.side-button:active {
+    transform: scale(0.92);
+}
+
+
+.button-icon {
+    font-size: 19px;
+
+    line-height: 18px;
+}
+
+
+.button-label {
+    font-size: 7px;
+
+    margin-top: 3px;
+
+    opacity: 0.85;
+}
+
+
+/* SCAN ACTIVE */
+
+.side-button.active {
+    background: var(--green);
+}
+
+
+/* =====================================
+   START CAMERA
+===================================== */
+
+.start-camera-button {
+    position: absolute;
+
+    left: 50%;
+    bottom: 20px;
+
+    transform: translateX(-50%);
+
+    width: 66px;
+    height: 66px;
+
+    border-radius: 50%;
+
+    border: 4px solid white;
+
+    background: #f7f7f7;
+
+    color: #222;
+
+    font-size: 27px;
+
+    cursor: pointer;
+
+    z-index: 10;
+
+    box-shadow:
+        0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+
+.start-camera-button:active {
+    transform:
+        translateX(-50%)
+        scale(0.9);
+}
+
+
+/* =====================================
+   INFO PANEL
+===================================== */
+
+.info-panel {
+    padding: 18px 18px 20px;
+
+    background: white;
+
+    border-radius: 20px 20px 0 0;
+
+    position: relative;
+
+    z-index: 12;
+
+    margin-top: -18px;
+}
+
+
+.info-title h2 {
+    font-size: 17px;
+
+    font-weight: 600;
+
+    margin-bottom: 5px;
+}
+
+
+.info-title p {
+    color: #777;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+}
+
+
+/* =====================================
+   STATS
+===================================== */
+
+.stats {
+    display: flex;
+
+    gap: 10px;
+
+    margin-top: 14px;
+}
+
+
+.stat-card {
+    flex: 1;
+
+    padding: 12px;
+
+    background: #f7f7f7;
+
+    border: 1px solid #eeeeee;
+
+    border-radius: 12px;
+}
+
+
+.stat-card strong {
+    display: block;
+
+    font-size: 18px;
+
+    font-weight: 600;
+
+    margin-bottom: 3px;
+}
+
+
+.stat-card small {
+    display: block;
+
+    font-size: 10px;
+
+    color: #888;
+}
+
+
+/* =====================================
+   BOTTOM NAVIGATION
+===================================== */
+
+.bottom-nav {
+    height: 68px;
+
+    position: fixed;
+
+    bottom: 0;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    width: 100%;
+
+    max-width: 480px;
+
+    background: white;
+
+    display: flex;
+
+    justify-content: space-around;
+
+    align-items: center;
+
+    border-top: 1px solid var(--border);
+
+    z-index: 50;
+}
+
+
+.nav-item {
+    position: relative;
+
+    border: none;
+
+    background: transparent;
+
+    color: #999;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 4px;
+
+    cursor: pointer;
+
+    min-width: 100px;
+}
+
+
+.nav-item span {
+    font-size: 20px;
+}
+
+
+.nav-item small {
+    font-size: 10px;
+}
+
+
+.nav-item.active {
+    color: var(--black);
+
+    font-weight: 600;
+}
+
+
+.log-badge {
+    position: absolute;
+
+    top: -3px;
+    right: 18px;
+
+    min-width: 17px;
+    height: 17px;
+
+    padding: 2px 5px;
+
+    border-radius: 10px;
+
+    background: #222;
+
+    color: white;
+
+    font-size: 8px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* =====================================
+   LOG PAGE
+===================================== */
+
+.log-page {
+    min-height: calc(100vh - 130px);
+
+    padding: 20px;
+
+    padding-bottom: 90px;
+
+    background: #fafafa;
+}
+
+
+.log-header {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 18px;
+}
+
+
+.log-header h2 {
+    font-size: 21px;
+
+    font-weight: 600;
+}
+
+
+.log-header p {
+    margin-top: 5px;
+
+    color: #888;
+
+    font-size: 11px;
+}
+
+
+.clear-button {
+    border: 1px solid #ddd;
+
+    background: white;
+
+    color: #555;
+
+    padding: 8px 12px;
+
+    border-radius: 9px;
+
+    cursor: pointer;
+}
+
+
+/* =====================================
+   LOG ITEM
+===================================== */
+
+.log-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 9px;
+}
+
+
+.log-item {
+    background: white;
+
+    padding: 14px;
+
+    border: 1px solid #e9e9e9;
+
+    border-radius: 12px;
+}
+
+
+.log-top {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+    gap: 10px;
+
+    margin-bottom: 8px;
+}
+
+
+.log-items {
+    font-weight: 600;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+}
+
+
+.log-time {
+    color: #999;
+
+    font-size: 10px;
+
+    white-space: nowrap;
+}
+
+
+.log-detail {
+    display: flex;
+
+    justify-content: space-between;
+
+    color: #888;
+
+    font-size: 10px;
+}
+
+
+.empty-log {
+    text-align: center;
+
+    padding: 70px 20px;
+
+    color: #999;
+}
+
+
+.empty-log div {
+    font-size: 32px;
+
+    margin-bottom: 12px;
+}
+
+
+.empty-log p {
+    font-weight: 600;
+
+    color: #666;
+
+    margin-bottom: 5px;
+}
+
+
+/* =====================================
+   FLASH
+===================================== */
+
+.flash-screen {
+    position: fixed;
+
+    inset: 0;
+
+    background: white;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    z-index: 999;
+
+    transition: opacity 0.08s;
+}
+
+
+.flash-screen.active {
+    opacity: 1;
+}
+
+
+/* =====================================
+   TOAST
+===================================== */
+
+.toast {
+    position: fixed;
+
+    left: 50%;
+
+    bottom: 82px;
+
+    transform:
+        translateX(-50%)
+        translateY(15px);
+
+    background: rgba(20, 20, 20, 0.9);
+
+    color: white;
+
+    padding: 9px 14px;
+
+    border-radius: 15px;
+
+    font-size: 11px;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    z-index: 1000;
+
+    transition: 0.25s;
+
+    white-space: nowrap;
+}
+
+
+.toast.show {
+    opacity: 1;
+
+    transform:
+        translateX(-50%)
+        translateY(0);
+}
+
+
+/* =====================================
+   MOBILE
+===================================== */
+
+@media (max-width: 480px) {
+
+    .app {
+        max-width: 100%;
+    }
+
+    .camera-container {
+        height: calc(100vh - 190px);
+
+        min-height: 500px;
+    }
+
+}
+
+
+/* =====================================
+   DESKTOP
+===================================== */
+
+@media (min-width: 481px) {
+
+    body {
+        padding: 20px 0;
+    }
+
+    .app {
+        min-height: calc(100vh - 40px);
+
+        border-radius: 20px;
+
+        box-shadow:
+            0 10px 35px rgba(0, 0, 0, 0.12);
+
+        overflow: hidden;
+    }
+
+    .bottom-nav {
+        bottom: 20px;
+
+        border-radius: 0 0 20px 20px;
+    }
+
+}
+
+
+
+/* ========================================
+   FIX LAYOUT MOBILE: KAMERA + SCROLL
+======================================== */
+
+@media (max-width: 480px) {
+    /* Halaman bisa digulir secara vertikal */
+    body {
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .app {
+        min-height: 100vh;
+        height: auto;
+        overflow: clip;
+        padding-bottom: 70px;
+    }
+
+    /* Kamera tetap besar dan tidak terpotong
+       karena dipaksa mengikuti panel informasi */
+    .camera-container {
+        height: 62vh;
+        min-height: 400px;
+        max-height: 680px;
+        flex-shrink: 0;
+    }
+
+    /* Panel informasi berada di bawah kamera */
+    .info-panel {
+        margin-top: -16px;
+        padding: 22px 17px 28px;
+        position: relative;
+        z-index: 12;
+        overflow: visible;
+    }
+
+    .info-title {
+        min-height: 0;
+    }
+
+    .info-title h2 {
+        font-size: 17px;
+        line-height: 1.4;
+        margin-bottom: 7px;
+    }
+
+    .info-title p {
+        display: block;
+        font-size: 12px;
+        line-height: 1.6;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .stats {
+        margin-top: 17px;
+    }
+
+    /* Navigasi tetap di bawah layar */
+    .bottom-nav {
+        height: 60px;
+        bottom: 0;
+    }
+
+    /* Ruang tambahan di bawah statistik */
+    .log-page {
+        padding-bottom: 90px;
+    }
+}

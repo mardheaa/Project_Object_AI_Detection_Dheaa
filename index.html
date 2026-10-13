@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    >
+
+    <title>Scanner</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- HEADER -->
+    <header class="header">
+    <div class="brand">
+        <div class="logo">
+            <img src="scan.png" alt="Logo Scanner">
+        </div>
+
+        <span>Detection Scanner</span>
+    </div>
+
+    <span class="camera-type" id="camera-type">
+        Kamera
+    </span>
+</header>
+
+
+    <!-- SCANNER -->
+    <main id="scanner-page" class="page active">
+
+        <div class="camera-container">
+
+            <!-- VIDEO -->
+            <video
+                id="video"
+                autoplay
+                playsinline
+                muted
+            ></video>
+
+            <!-- AI CANVAS -->
+            <canvas id="canvas"></canvas>
+
+
+            <!-- PLACEHOLDER -->
+            <div
+                id="camera-placeholder"
+                class="camera-placeholder"
+            >
+
+                <div class="placeholder-icon">
+                    ◉
+                </div>
+
+                <p>Kamera belum aktif</p>
+
+                <small>
+                    Tekan tombol kamera untuk memulai
+                </small>
+
+            </div>
+
+
+            <!-- STATUS -->
+            <div class="detection-status">
+
+                <span
+                    id="status-dot"
+                    class="status-dot"
+                ></span>
+
+                <span id="camera-status">
+                    Kamera tidak aktif
+                </span>
+
+            </div>
+
+
+            <!-- CAMERA TOOLS -->
+            <div class="camera-controls">
+
+                <button
+                    id="btn-capture"
+                    class="side-button"
+                    title="Ambil Foto"
+                >
+                    <span class="button-icon">○</span>
+                    <span class="button-label">Foto</span>
+                </button>
+
+
+                <button
+                    id="btn-switch"
+                    class="side-button"
+                    title="Balik Kamera"
+                >
+                    <span class="button-icon">↻</span>
+                    <span class="button-label">Balik</span>
+                </button>
+
+
+                <button
+                    id="btn-ai"
+                    class="side-button"
+                    title="Mulai Scan"
+                >
+                    <span class="button-icon">⌕</span>
+                    <span class="button-label">Scan</span>
+                </button>
+
+
+                <button
+                    id="btn-flash"
+                    class="side-button"
+                    title="Flash"
+                >
+                    <span
+                        id="flash-icon"
+                        class="button-icon"
+                    >
+                        ⚡
+                    </span>
+
+                    <span class="button-label">
+                        Flash
+                    </span>
+                </button>
+
+            </div>
+
+
+            <!-- CAMERA BUTTON -->
+            <button
+                id="btn-camera"
+                class="start-camera-button"
+                title="Aktifkan Kamera"
+            >
+                ○
+            </button>
+
+        </div>
+
+
+        <!-- INFORMATION -->
+        <section class="info-panel">
+
+            <div class="info-title">
+
+                <h2 id="info-title">
+                    Kamera siap digunakan
+                </h2>
+
+                <p id="info-description">
+                    Aktifkan kamera untuk mulai.
+                </p>
+
+            </div>
+
+
+            <div class="stats">
+
+                <div class="stat-card">
+
+                    <div>
+                        <strong id="object-count">0</strong>
+
+                        <small>
+                            Objek terdeteksi
+                        </small>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div>
+                        <strong id="person-count">0</strong>
+
+                        <small>
+                            Orang
+                        </small>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- LOG PAGE -->
+    <main
+        id="log-page"
+        class="page log-page"
+    >
+
+        <div class="log-header">
+
+            <div>
+
+                <h2>Log Data</h2>
+
+                <p>
+                    Riwayat hasil pemindaian
+                </p>
+
+            </div>
+
+            <button
+                id="btn-clear-log"
+                class="clear-button"
+            >
+                Hapus
+            </button>
+
+        </div>
+
+
+        <div
+            id="log-list"
+            class="log-list"
+        >
+
+            <div class="empty-log">
+
+                <div>—</div>
+
+                <p>
+                    Belum ada data
+                </p>
+
+                <small>
+                    Hasil scan akan muncul di sini.
+                </small>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- BOTTOM NAVIGATION -->
+    <nav class="bottom-nav">
+
+        <button
+            id="nav-scanner"
+            class="nav-item active"
+        >
+            <span>⌂</span>
+            <small>Scanner</small>
+        </button>
+
+
+        <button
+            id="nav-log"
+            class="nav-item"
+        >
+            <span>≡</span>
+            <small>Log Data</small>
+
+            <b
+                id="log-badge"
+                class="log-badge"
+            >
+                0
+            </b>
+
+        </button>
+
+    </nav>
+
+
+    <!-- FLASH EFFECT -->
+    <div
+        id="flash-screen"
+        class="flash-screen"
+    ></div>
+
+
+    <!-- TOAST -->
+    <div
+        id="toast"
+        class="toast"
+    >
+        <span id="toast-message"></span>
+    </div>
+
+</div>
+
+
+<!-- TENSORFLOW -->
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0"></script>
+
+<!-- COCO SSD -->
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
+
+<script>
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBLsOB-gk7M_Z8zTRvt7MO5GhOcKq526X0",
+  authDomain: "object-detection-011026.firebaseapp.com",
+  projectId: "object-detection-011026",
+  storageBucket: "object-detection-011026.firebasestorage.app",
+  messagingSenderId: "678449863529",
+  appId: "1:678449863529:web:99e7f4b18244dc151b7bf8"
+};
+
+
+    // Inisialisasi Firebase
+    // firebase.initializeApp(firebaseConfig);
+
+    // Inisialisasi Firestore
+    // const db = firebase.firestore();
+
+</script>
+
+<!-- APP -->
+<script type="module" src="app.js"></script>
+
+</body>
+</html>
